@@ -7,25 +7,25 @@ import android.view.WindowManager
 
 class MainActivity : Activity() {
 
-    private lateinit var glView: AuroraGLSurfaceView
+    private lateinit var sceneView: AuroraSceneView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        glView = AuroraGLSurfaceView(this)
-        setContentView(glView)
+        sceneView = AuroraSceneView(this)
+        setContentView(sceneView)
     }
 
     override fun onResume() {
         super.onResume()
         enterImmersiveMode()
-        glView.onResume()
+        sceneView.glSurfaceView.onResume()
     }
 
     override fun onPause() {
-        glView.onPause()
+        sceneView.glSurfaceView.onPause()
         super.onPause()
     }
 
