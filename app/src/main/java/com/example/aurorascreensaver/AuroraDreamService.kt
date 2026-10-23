@@ -1,10 +1,11 @@
 package com.example.aurorascreensaver
 
 import android.service.dreams.DreamService
+import android.view.WindowManager
 
 class AuroraDreamService : DreamService() {
 
-    private var glView: AuroraGLSurfaceView? = null
+    private var sceneView: AuroraSceneView? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -12,23 +13,25 @@ class AuroraDreamService : DreamService() {
         isFullscreen = true
         isInteractive = false
 
-        val view = AuroraGLSurfaceView(this)
-        glView = view
+        window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        val view = AuroraSceneView(this)
+        sceneView = view
         setContentView(view)
     }
 
     override fun onDreamingStarted() {
         super.onDreamingStarted()
-        glView?.onResume()
+        sceneView?.glSurfaceView?.onResume()
     }
 
     override fun onDreamingStopped() {
-        glView?.onPause()
+        sceneView?.glSurfaceView?.onPause()
         super.onDreamingStopped()
     }
 
     override fun onDetachedFromWindow() {
-        glView?.onPause()
+        sceneView?.glSurfaceView?.onPause()
         super.onDetachedFromWindow()
     }
 }
