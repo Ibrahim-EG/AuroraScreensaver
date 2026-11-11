@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>7.3</LangVersion>
+    <AssemblyName>AuroraScreensaver</AssemblyName>
+    <RootNamespace>AuroraScreensaver.Win</RootNamespace>
+    <Deterministic>true</Deterministic>
+    <!-- SharpDX is x86/x64 native-backed; keep the app 64-bit. -->
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3DCompiler" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Shaders\aurora.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <!-- Precompiled shader blobs produced by build-shaders.ps1 (fxc). -->
+    <None Include="Shaders\*.cso" Condition="Exists('Shaders\aurora_scene_ps.cso')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
