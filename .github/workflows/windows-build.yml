@@ -1,0 +1,40 @@
+name: Windows Aurora Screensaver Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Compile shaders (optional precompile)
+        shell: pwsh
+        working-directory: windows/AuroraScreensaver.Win
+        run: ./build-shaders.ps1
+
+      - name: Build
+        working-directory: windows/AuroraScreensaver.Win
+        run: dotnet build -c Release
+
+      - name: Package screensaver (.scr)
+        shell: pwsh
+        run: |
+          $out = "windows/AuroraScreensaver.Win/bin/Release/net48-win-x64"
+          if (-not (Test-Path $out)) { $out = "windows/AuroraScreensaver.Win/bin/Release/net48" }
+          Copy-Item "$out/AuroraScreensaver.exe" "$env:RUNNER_TEMP/AuroraScreensaver.scr"
+          Compress-Archive -Path $out/*, "$env:RUNNER_TEMP/AuroraScreensaver.scr" `
+            -DestinationPath aurora-screensaver-windows.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aurora-screensaver-windows
+          path: aurora-screensaver-windows.zip
